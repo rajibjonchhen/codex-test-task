@@ -29,7 +29,7 @@ const Registration = ({setShowSignIn})  => {
   const [showPassword, setShowPassword] = useState(true)
   const [isSubmit, setIsSubmit] = useState(false)
   const [signUpErr, setSignUpErr] = useState({})
-  
+  const [checkEmail, setCheckEmail] = useState(false)
   
     const [signUpUser, setSignUpUser] = useState({
     name: "",
@@ -67,6 +67,7 @@ const Registration = ({setShowSignIn})  => {
 const validateForm = (signUpUser) => {
     const regex = /\S+@\S+\.\S+/
     const errors = {} 
+    setCheckEmail(true)
     if(!signUpUser.email){
         errors.email = "email is missing"
     }else{
@@ -143,51 +144,53 @@ try {
          
           {error.length > 0 && <Alert  severity="error">{error}</Alert>}
           {/* name field */}
-          <Form.Group className="mb-3" 
-          onChange={(e) => handleChange(e)} 
-          value={signUpUser.name} 
-          placeholder="First Name"
-          name="name"
-          id="name"
-        required
+          <Form.Group className="mb-2" 
+          
           >
             <Form.Label>First Name</Form.Label>
-            <Form.Control type="text" placeholder="Enter first name" />
-            <Form.Text className="text-danger" align='left'>{!signUpUser.name && signUpErr.name} </Form.Text>
+            <Form.Control type="text" placeholder="Enter first name"
+            onChange={(e) => handleChange(e)} 
+            value={signUpUser.name} 
+            name="name"
+            id="name"
+          required
+            />
+            <Form.Text className="text-danger" align='left'>{ !signUpUser.name && signUpErr.name} </Form.Text>
         </Form.Group>
 
           {/* surname field */}
-          <Form.Group className="mb-3" 
-          onChange={(e) => handleChange(e)} 
-          value={signUpUser.surname} 
-          placeholder="Surname"
-          name="surname"
-          id="surname"
-        required
+          <Form.Group className="mb-2" 
           >
             <Form.Label> Surname</Form.Label>
-            <Form.Control type="text" placeholder="Enter surname" />
+            <Form.Control type="text"  
+             onChange={(e) => handleChange(e)} 
+             value={signUpUser.surname} 
+             placeholder="Enter surname"
+             name="surname"
+             id="surname"
+           required/>
             <Form.Text className="text-danger" align='left'>{!signUpUser.surname && signUpErr.surname} </Form.Text>
         </Form.Group>
            
           {/* email field */}
-          <Form.Group className="mb-3" 
+          <Form.Group className="mb-2" 
           controlId="formBasicEmail" 
-          onChange={(e) => handleChange(e)} 
-          value={signUpUser.email} 
-          placeholder="Email Address"
-          name="email"
-          id="email"
-        required
+          
           >
             <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" placeholder="Enter email" />
-            <Form.Text className="text-danger" align='left'>{!signUpUser.email && signUpErr.email || signUpUser.email && signUpErr.email} </Form.Text>
+            <Form.Control type="email" placeholder="Enter email" 
+            onChange={(e) => handleChange(e)} 
+            value={signUpUser.email} 
+            name="email"
+            id="email"
+          required
+            />
+            <Form.Text className="text-danger" align='left'>{checkEmail===false? "": !signUpUser.email? "email is required" : (/\S+@\S+\.\S+/.test(signUpUser.email)===false &&  "email is not valid" )} </Form.Text>
         </Form.Group>
             
           {/* password field */}
           <Form.Group 
-          className="mb-3" 
+          className="mb-2" 
           controlId="formBasicPassword"
           style={{position:'relative'}}
           >
@@ -211,7 +214,7 @@ try {
       </Form.Group>
     
           {/* password field */}
-      <Form.Group  className="mb-3"  style={{position:'relative'}}>
+      <Form.Group  className="mb-2"  style={{position:'relative'}}>
         <Form.Label>Repassword</Form.Label>
             
             <Form.Control
@@ -233,7 +236,7 @@ try {
            </Form.Group>
             
           {/* role field */}
-            <Form.Group  className="mb-3" >
+            <Form.Group  className="mb-2" >
 
                 <Form.Label id="demo-simple-select-label">Role  </Form.Label>
                   {["manager","developer"].map((category, i) => (<>
