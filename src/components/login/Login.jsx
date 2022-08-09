@@ -8,7 +8,7 @@ import SignIn from './signIn/SignIn'
 function Login() {
     const [loginPage, setLoginPage] = useState("signIn")
   return (
-    <Container className="theme-light-bg mt-3 py-3 text-light">
+    <Container className="theme-light-bg py-3 text-light" style={{minHeight:"100vh"}}>
     <Row>
       <Col sm={12} md={6} style={{ margin: "auto" }}>
       <Registration loginPage={loginPage} setLoginPage={setLoginPage} />

@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+.pointer{
+  cursor: pointer;
+}
+.pointer:hover{
+  color: #61dafb;
+}

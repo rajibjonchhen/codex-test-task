@@ -291,15 +291,15 @@ const Registration = ({ loginPage, setLoginPage }) => {
             </Form.Group>
 
             <div className="m-auto text-center">
-              <button
+            <Button
                 type="submit"
-                variant="contained"
+                variant="outline-light"
                 onClick={(e) => handleSubmit(e)}
               >
                 Register
-              </button>
-              <p>
-                Already a member? <span className="text-blue" onClick={() => setLoginPage("signin")}>Sign In</span>
+              </Button>
+              <p className="my-3">
+                Already a member? <span className="text-blue pointer" onClick={() => setLoginPage("signin")}>Sign In</span>
               </p>
             </div>
           </Form>

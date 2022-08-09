@@ -4,6 +4,7 @@ import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 
+
 const SignIn = ({ loginPage, setLoginPage }) => {
   //   const dispatch = useDispatch()
   const navigate = useNavigate();
@@ -173,15 +174,15 @@ const SignIn = ({ loginPage, setLoginPage }) => {
 
 
             <div className="m-auto text-center">
-              <button
+              <Button
                 type="submit"
-                variant="contained"
+                variant="outline-light"
                 onClick={(e) => handleSubmit(e)}
               >
                 Sign In
-              </button>
-              <p  variant="body2">
-                Not a member? <span className="text-blue" onClick={() => setLoginPage("registration")}>Register</span>
+              </Button>
+              <p   className="my-3">
+                Not a member? <span className="text-blue pointer" onClick={() => setLoginPage("registration")}>Register</span>
               </p>
             </div>
           </Form>
