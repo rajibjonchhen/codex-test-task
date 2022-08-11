@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 
 
-
 const Registration = ({ loginPage, setLoginPage }) => {
   //   const dispatch = useDispatch()
   const navigate = useNavigate();
@@ -93,10 +92,9 @@ const Registration = ({ loginPage, setLoginPage }) => {
 
   const registerUser = async () => {
     try {
-      console.log(process.env.REACT_APP_PROD_BE_URL);
+      const baseUrl = "http://localhost:3001"
       console.log(signUpUser);
-      const response = await fetch(
-        `${process.env.REACT_APP_PROD_BE_URL}/users/signUp`,
+      const response = await fetch(`${baseUrl}/users/register`, 
         {
           method: "POST",
           body: JSON.stringify(signUpUser),
@@ -130,7 +128,7 @@ const Registration = ({ loginPage, setLoginPage }) => {
               width: "100%",
               padding: "30px 15px",
               border: "1px solid rgb(200,200,200)",
-              display:loginPage === "signin" ? "none" : "block",
+              display:loginPage === "signIn" ? "none" : "block",
             }}
           >
             <p className="h1 text-center">Sign Up</p>
@@ -179,7 +177,6 @@ const Registration = ({ loginPage, setLoginPage }) => {
                 onChange={(e) => handleChange(e)}
                 value={signUpUser.email}
                 name="email"
-                id="email"
                 required
               />
               <Form.Text className="text-danger" align="left">
@@ -201,7 +198,6 @@ const Registration = ({ loginPage, setLoginPage }) => {
                 value={signUpUser.password}
                 onChange={(e) => handleChange(e)}
                 type={showPassword ? "text" : "password"}
-                id="password"
                 required
               />
               <span
@@ -279,14 +275,16 @@ const Registration = ({ loginPage, setLoginPage }) => {
                       type="radio"
                       name="role"
                       id={category}
+                      value={category}
                       onChange={(e) => handleChange(e)}
+                      checked={signUpUser.role === category}
                     />
                     {category}
                   </Form.Label>
                 </>
               ))}
               <Form.Text className="text-danger" align="left">
-                {!signUpUser.role ? signUpErr?.role : ""}
+                {signUpErr?.role}
               </Form.Text>
             </Form.Group>
 
@@ -299,7 +297,7 @@ const Registration = ({ loginPage, setLoginPage }) => {
                 Register
               </Button>
               <p className="my-3">
-                Already a member? <span className="text-blue pointer" onClick={() => setLoginPage("signin")}>Sign In</span>
+                Already a member? <span className="text-blue pointer" onClick={() => setLoginPage("signIn")}>Sign In</span>
               </p>
             </div>
           </Form>

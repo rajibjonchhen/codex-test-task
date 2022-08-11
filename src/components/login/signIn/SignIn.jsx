@@ -15,7 +15,7 @@ const SignIn = ({ loginPage, setLoginPage }) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [signInErr, setSignInErr] = useState({});
   const [checkUserInput, setCheckUserInput] = useState(false);
-
+const [user, setUser] = useState(null)
   const [signInUser, setSignInUser] = useState({
     email: "",
     password: "",
@@ -70,10 +70,9 @@ const SignIn = ({ loginPage, setLoginPage }) => {
 
   const registerUser = async () => {
     try {
-      console.log(process.env.REACT_APP_PROD_BE_URL);
-      console.log(signInUser);
+        const baseUrl = "http://localhost:3001"
       const response = await fetch(
-        `${process.env.REACT_APP_PROD_BE_URL}/users/signIp`,
+        `${baseUrl}/users/signin`,
         {
           method: "POST",
           body: JSON.stringify(signInUser),
@@ -89,6 +88,7 @@ const SignIn = ({ loginPage, setLoginPage }) => {
       } else {
         const data = await response.json();
         console.log(data);
+        setUser(data.user)
         localStorage.setItem("MyToken", data.token);
         // dispatch(setMyInfoAction(data.user))
         navigate("/home");
@@ -111,6 +111,7 @@ const SignIn = ({ loginPage, setLoginPage }) => {
             }}
           >
             <p className="h1 text-center">Sign In</p>
+            <p className="h1 text-center">{user?.email}</p>
 
             {error.length > 0 && <Alert severity="error">{error}</Alert>}
             
@@ -124,7 +125,7 @@ const SignIn = ({ loginPage, setLoginPage }) => {
                 onChange={(e) => handleChange(e)}
                 value={signInUser.email}
                 name="email"
-                id="email"
+               
                 required
               />
               <Form.Text className="text-danger" align="left">
@@ -146,7 +147,7 @@ const SignIn = ({ loginPage, setLoginPage }) => {
                 value={signInUser.password}
                 onChange={(e) => handleChange(e)}
                 type={showPassword ? "text" : "password"}
-                id="password"
+               
                 required
               />
               <span
