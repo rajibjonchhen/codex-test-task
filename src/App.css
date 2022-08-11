@@ -43,3 +43,10 @@
 .pointer:hover{
   color: #61dafb;
 }
+
+.no-box-shadow{
+  box-shadow: none !important;
+}
+.no-box-shadow:hover{
+  box-shadow: none !important;
+}
