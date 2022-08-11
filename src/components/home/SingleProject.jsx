@@ -6,11 +6,11 @@ function SingleProject({project}) {
   const navigate= useNavigate()
   return (
     <Col xs={12} sm={6} md={4} lg={3}>
-        <Card className="bg-dark border-light mt-3" >
+        <Card className="bg-dark border-light mt-3" style={{minHeight:"250px"}}>
       {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-      <Card.Body>
+      <Card.Body >
         <Card.Title >{project.title}</Card.Title>
-        <Card.Text>
+        <Card.Text style={{minHeight:"100px"}}>
           {project.description}
         </Card.Text>
         <Button variant="primary" onClick={() => {navigate(`/detail/${project._id}`)}}>See detail</Button>

@@ -10,7 +10,7 @@ function App() {
   return (
   
 
-    <div className="App bg-dark text-white">
+    <div className="App bg-dark text-white" style={{minHeight:"100vh"}}>
       <BrowserRouter>
         <Routes>
           <Route path="/home" element={<Home/>} />

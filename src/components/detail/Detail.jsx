@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Col, Container, Row } from 'react-bootstrap'
 import { useParams } from 'react-router-dom';
 import Loader from '../Loader';
-import EditModal from './EditModal';
+import AddEditProject from './AddEditProject';
 
 function Detail() {
   
@@ -10,10 +10,11 @@ function Detail() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
     const [showEditModal, setShowEditModal] = useState(false);
+    
     const params = useParams()
     useEffect(() => {
         fetchProject(params.projectId);
-    }, [])
+    }, [project])
 
     const fetchProject = async (projectId) => {
         const baseUrl = "http://localhost:3001"
@@ -48,21 +49,24 @@ function Detail() {
     return (  
     <div>
         {isLoading ? (<Loader/>) : error ? (<div>{error}</div>) : project &&
-        <Container>
+        <Container >
+            <p className="h1">{project.title}</p>
+            <Row style={{minHeight:"50vh"}}>
+                <Col sm={12} md={6} style={{ margin: "auto" }}>
+                    <p className="h3">Description</p>
+                    <p>{project.description}</p>
+                </Col>
+                <Col sm={12} md={6} style={{ margin: "auto" }}> 
+                <p className="h3">All tasks</p>
+                   {project?.tasks.map((task) =><p> {task.task}</p>)}
+                </Col>
+            </Row>
             <Row>
                 <Col>
                     <Button onClick={() => setShowEditModal(true)}>Edit Project</Button>
                 </Col>
             </Row>
-            <Row>
-                <Col sm={12} md={6} style={{ margin: "auto" }}>
-                    {project.title}
-                </Col>
-                <Col sm={12} md={6} style={{ margin: "auto" }}> 
-                {project.description}   
-                </Col>
-            </Row>
-            <EditModal fetchProject={fetchProject} setShowEditModal={setShowEditModal} showEditModal={showEditModal} project={project}/>
+            <AddEditProject setProject={setProject} setShowEditModal={setShowEditModal} showEditModal={showEditModal} project={project}/>
             
         </Container>
         

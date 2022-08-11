@@ -265,7 +265,7 @@ const Registration = ({ loginPage, setLoginPage }) => {
               <Form.Label id="demo-simple-select-label">Role </Form.Label>
               {["manager", "developer"].map((category, i) => (
                 <>
-                  <Form.Label
+                  <Form.Label key={i}
                     className=" d-flex justify-content-start align-items-center"
                     id="demo-simple-select-label"
                   >

@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
+import AddEditProject from "../detail/AddEditProject";
 import Loader from "../Loader";
 import SingleProject from "./SingleProject";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [projects, setProjects] = useState([{},{}]);
+  const [projects, setProjects] = useState([]);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+
   useEffect(() => {
     fetchProjects();
   }, []);
@@ -41,11 +45,47 @@ function Home() {
     }
   };
 
+  const handleCreateProject = async () => {
+    const baseUrl = "http://localhost:3001"
+    try {
+      const response = await fetch(
+        `${baseUrl}/projects`,
+        {
+          method: "Post",
+          body: JSON.stringify(),
+          headers: {
+            "content-type": "application/json",
+            "authorization": localStorage.getItem("MyToken"),
+          },
+        }
+      );
+      if (response.status !== 200) {
+        const data = await response.json();
+        console.log(data);
+        setError("Error in fetching projects");
+        setIsLoading(false);
+      } else {
+        const data = await response.json();
+        setProjects(data.projects);
+        console.log(data.projects.reverse());
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+      setError("Could not fetch projects");
+    }
+  };
+
   return (
     <div>
       <Container className="">
+        <Row>
+          <Col>
           <h1 >Projects</h1>
-          <Button >Create new project</Button>
+          <Button onClick={() => setShowEditModal(true)}>Create new project</Button>
+          </Col>
+        </Row>
         <Row>
           {
         isLoading ? (
@@ -61,6 +101,8 @@ function Home() {
             )
           }
         </Row>
+          <AddEditProject fetchProjects={fetchProjects} setShowEditModal={setShowEditModal} showEditModal={showEditModal} />
+
       </Container>
     </div>
   );

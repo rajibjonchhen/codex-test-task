@@ -3,12 +3,14 @@ import { Form } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 
-function EditModal({fetchProject, setShowEditModal, showEditModal, project}) {
+function AddEditProject({fetchProject, fetchProjects, setShowEditModal, showEditModal, project, setProject}) {
   const handleClose = () => setShowEditModal(false)
   const handleShow = () => setShowEditModal(true)
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const [url, setUrl] = useState("http://localhost:3001/projects")
+  const [method, setMethod] = useState("POST")
 
 const [updatedProject, setUpdatedProject] = useState({
     title:"",
@@ -16,21 +18,23 @@ const [updatedProject, setUpdatedProject] = useState({
     developers:[]
 })
   useEffect(() => {
-      console.log(project)
-    setUpdatedProject({
+      
+      if(project){
+        setUrl(url+"/"+project.id)
+        setMethod("PUT")
+        setUpdatedProject({
         title: project.title,
         description: project.description,
         developers: project.developers
     })
-  },[])
+  }
+},[])
 
 
   const handleSave = async(e) => {
-    e.preventDefault()
 try {
-    const baseUrl = "http://localhost:3001"
-    const response = fetch(`${baseUrl}/projects/${project._id}`, {
-        method: "PUT",
+    const response =await fetch(url, {
+        method,
         body: JSON.stringify(updatedProject),
         headers: {
             "authorization": localStorage.getItem("MyToken"),
@@ -44,10 +48,14 @@ try {
         setIsLoading(false)
     } else{
         const data = await response.json()
-        console.log(data)
         setIsLoading(false)
         setShowEditModal(false)
-        fetchProject()
+        if(project){
+          setProject(data.project)
+        } else{
+          fetchProjects()
+        }
+        handleClose()
     }
 
 } catch (error) {
@@ -62,20 +70,19 @@ try {
         </Modal.Header>
         <Modal.Body>
             <Form>
-                {/* <Form.Group className="w-100">
+                <Form.Group className="w-100">
                     <Form.Label>
                         Title
-                <Form.Control  type="text" name="title" id="title" value={updatedProject.title} onChange={() => setUpdatedProject({...updatedProject,title:e.target.value})}/>
+                <Form.Control  type="text" name="title" id="title" value={updatedProject.title} onChange={(e) => setUpdatedProject({...updatedProject,title:e.target.value})}/>
                     </Form.Label>
                 </Form.Group>
                 <Form.Group>
                 <Form.Label>
                     Description
-                    <Form.Control as="textarea" rows={3} name="description" id="description" value={updatedProject.description}/>
+                    <Form.Control as="textarea" rows={3} name="description" id="description" value={updatedProject.description} onChange={(e) => setUpdatedProject({...updatedProject,description:e.target.value})}/>
                 </Form.Label>
-                </Form.Group> */}
+                </Form.Group>
             </Form>
-            {project.developers}
                     <div>
                         {project?.developers?.map((developer) => 
                         <div key={developer?._id}>{developer.name} </div>
@@ -95,4 +102,4 @@ try {
   )
 }
 
-export default EditModal
+export default AddEditProject
