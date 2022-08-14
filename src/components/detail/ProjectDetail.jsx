@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, ListGroup, ListGroupItem, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
+import SelectDeveloper from "../../getDevelopers/SelectDeveloper";
 import Loader from "../Loader";
 import AddEditProject from "./AddEditProject";
 import AddEditTask from "./AddEditTask";
+import SelectDeveloperModal from "./SelectDeveloperModal";
 
 function ProjectDetail() {
   const [project, setProject] = useState(null);
@@ -12,9 +14,17 @@ function ProjectDetail() {
   const [error, setError] = useState("");
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
+  const [showDeveloperModal, setShowDeveloperModal] = useState(false);
   const navigate = useNavigate();
-
   const params = useParams();
+
+  const [selected, setSelected] = useState({});
+const [developers, setDevelopers] = useState([]);
+
+useEffect(() => {
+  fetchDevelopers()
+}, [])
+
   useEffect(() => {
     fetchProject(params.projectId);
     fetchTasks(params.projectId);
@@ -44,6 +54,32 @@ function ProjectDetail() {
       setError("Could not fetch projects");
     }
   };
+
+
+  const fetchDevelopers = async () => {
+    const baseUrl = "http://localhost:3001"
+    try {
+      const response = await fetch(baseUrl + "/users/developers", {
+        method: "GET",
+        headers: { 
+          "authorization": localStorage.getItem("MyToken"),
+        }})
+      if (response.status !== 200 && response.status !== 201) {
+        // const data = await response.json();
+        console.log({status:response.status, message:response.message});
+        return {error:"Error in fetching developers", isLoading:false};
+      }
+      else {
+        const data = await response.json();
+        console.log(data)
+        setDevelopers(data.developers)
+      }
+    } catch (error) {
+      console.log(error);
+      return {error:"Could not fetch developers", isLoading:false}
+    }
+  }
+  
 
   const fetchTasks = async (projectId) => {
     const baseUrl = "http://localhost:3001";
@@ -78,7 +114,7 @@ function ProjectDetail() {
         <div>{error}</div>
       ) : (
         project && (
-          <Container>
+          <Container className="text-start">
             <p className="h1 mt-5">{project.title}</p>
             <Row className="border" style={{ minHeight: "50vh" }}>
               <Col sm={12} md={6} style={{ margin: "0 auto" }}>
@@ -86,15 +122,24 @@ function ProjectDetail() {
                   <img src={project?.image || "https://via.placeholder.com/300/50"} alt="project"  width="100%"/>
                   <p className="h3">Description</p>
                   <p>{project.description}</p>
+                  <p className="">Developers <br/>{ project.developers.length<1? "not assigned":project?.developers?.map((developer) => <span className="bg-warning p-1">{developer.name },</span>)} </p>
+                  
+                  <div className="d-flex">
+                  
+                  <Button className="mx-2" onClick={() => setShowDeveloperModal(true)}>Assign Developer</Button>
+                    </div>
                 </div>
               </Col>
               <Col sm={12} md={6} style={{ margin: "0 auto" }}>
                 <div className="bg-dark  text-start p-3 ">
                  
                   <p className="h3">All tasks</p>
+                  <ListGroup>
+
                   {tasks?.map((task, i) => (
-                    <p key={i} className="pointer"  onClick={() => navigate(`/task/${task._id}`)}> {task.task}</p>
-                  ))}
+                    <ListGroup.Item key={i} className="pointer" variant="light" onClick={() => navigate(`/task/${task._id}`)}> {task.task}</ListGroup.Item>
+                    ))}
+                    </ListGroup>
                 </div>
                 <Button className="m-3" onClick={() => setShowTaskModal(true)}>Add task</Button>
               </Col>
@@ -118,8 +163,9 @@ function ProjectDetail() {
               setProject={setProject}
               project={project}
               fetchTasks={fetchTasks}
-              
             />
+
+            <SelectDeveloperModal showDeveloperModal={showDeveloperModal} setShowDeveloperModal={setShowDeveloperModal} project={project}/>
           </Container>
         )
       )}

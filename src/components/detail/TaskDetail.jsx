@@ -85,11 +85,11 @@ const [comments, setComments] = useState([])
                         <Col sm={12} md={6} style={{ margin: "auto" }}>
                             <div className='bg-dark border-light mt-3'>
                                 <p>{task?.description}</p>
-                                <p>{task?.userId}</p>
+                                <p>Developer - {task?.developers.length<1? <span>not assigned</span> : task?.developers.map((developer) => <span>{developer.name}</span>)}</p>
                                 <p className="bg-dark text-start">All comments</p>
                                 {comments?.map((comment, i) => (
                                     <p key={i} className="bg-warning text-start p-2"> {comment.comment}
-                                    <span>{comment?.commentedBy || ""}</span>
+                                    <br/> By - <span>{comment?.commentedBy.name + " " +comment?.commentedBy.surname|| ""}</span>
                                     </p>
                                 ))}
                                 <Button className="m-3"  onClick={() => setShowTaskModal(true)}>Edit Task</Button>

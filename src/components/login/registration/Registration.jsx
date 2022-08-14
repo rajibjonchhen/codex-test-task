@@ -264,7 +264,6 @@ const Registration = ({ loginPage, setLoginPage }) => {
             <Form.Group className="mb-2">
               <Form.Label id="demo-simple-select-label">Role </Form.Label>
               {["manager", "developer"].map((category, i) => (
-                <>
                   <Form.Label key={i}
                     className=" d-flex justify-content-start align-items-center"
                     id="demo-simple-select-label"
@@ -281,7 +280,7 @@ const Registration = ({ loginPage, setLoginPage }) => {
                     />
                     {category}
                   </Form.Label>
-                </>
+                
               ))}
               <Form.Text className="text-danger" align="left">
                 {signUpErr?.role}
