@@ -10,7 +10,8 @@ function AddEditTask({
   showTaskModal,
   project,
   setProject,
-  task
+  task,
+  fetchTask
 }) {
   const handleClose = () => setShowTaskModal(false);
   const handleShow = () => setShowTaskModal(true);
@@ -48,6 +49,7 @@ function AddEditTask({
   }, []);
 
   const handleSave = async (e) => {
+    handleClose();
     try {
       const response = await fetch(url, {
         method,
@@ -66,19 +68,25 @@ function AddEditTask({
         console.log(data)
         if (!task) {
           console.log("without task",data)
-          fetchProject(data.project._id);
-        } else {
-          console.log("with task",data)
+          // fetchProject(data.project._id);
+          setProject(data.project);
           setUpdatedTask({
             task: "",
             description: "",
-          });
+          })
+        } else {
+          console.log("with task",data)
+          fetchTask(data.task._id)
         }
-        handleClose();
+        
         setIsLoading(false);
         setShowTaskModal(false);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      setError("Could not fetch developers");
+      setIsLoading(false);
+    }
   };
 
   return (
