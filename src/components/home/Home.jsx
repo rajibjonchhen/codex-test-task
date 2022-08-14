@@ -8,7 +8,7 @@ function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [projects, setProjects] = useState([]);
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [showProjectModal, setShowProjectModal] = useState(false);
 
 
   useEffect(() => {
@@ -83,7 +83,7 @@ function Home() {
         <Row>
           <Col>
           <h1 >Projects</h1>
-          <Button onClick={() => setShowEditModal(true)}>Create new project</Button>
+          <Button onClick={() => setShowProjectModal(true)}>Create new project</Button>
           </Col>
         </Row>
         <Row>
@@ -101,7 +101,7 @@ function Home() {
             )
           }
         </Row>
-          <AddEditProject fetchProjects={fetchProjects} setShowEditModal={setShowEditModal} showEditModal={showEditModal} />
+          <AddEditProject fetchProjects={fetchProjects} setShowProjectModal={setShowProjectModal} showProjectModal={showProjectModal} />
 
       </Container>
     </div>

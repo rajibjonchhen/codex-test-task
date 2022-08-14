@@ -13,7 +13,7 @@ function SingleProject({project}) {
         <Card.Text style={{minHeight:"100px"}}>
           {project.description}
         </Card.Text>
-        <Button variant="primary" onClick={() => {navigate(`/detail/${project._id}`)}}>See detail</Button>
+        <Button variant="primary" onClick={() => {navigate(`/project/${project._id}`)}}>See detail</Button>
       </Card.Body>
     </Card>
     </Col>
