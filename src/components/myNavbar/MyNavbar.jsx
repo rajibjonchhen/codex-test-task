@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom';
 function MyNavbar() {
   return (
     
-    <Navbar className="border-bottom" bg="dark" variant="dark" style={{position:"sticky", top:'0'}}>
+    <Navbar className="border-bottom" bg="dark" variant="dark" style={{position:"sticky", top:'0', zIndex:"1"}}>
     <Container>
       <Navbar.Brand>
-            <Link to="/" style={{color:"white", textDecoration:"none"}}>
+            <Link to="/home" style={{color:"white", textDecoration:"none"}}>
                 Codex Software
             </Link>
       </Navbar.Brand>

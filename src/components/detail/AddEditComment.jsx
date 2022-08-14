@@ -7,7 +7,7 @@ function AddEditComment({
   setTask,
   setShowCommentModal,
   showCommentModal,
-  fetchTask,
+  fetchComments,
   task,
   comment
 }) {
@@ -17,7 +17,7 @@ function AddEditComment({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [url, setUrl] = useState("");
-  const [method, setMethod] = useState("POST");
+  const [method, setMethod] = useState("");
 
   const [updatedComment, setUpdatedComment] = useState({
     comment: "",
@@ -25,7 +25,6 @@ function AddEditComment({
 
   useEffect(() => {
     
-      setUrl(`http://localhost:3001/tasks/${task?._id}/comments`)
     if (comment) {
       setUrl(`http://localhost:3001/comments/${comment?._id}`);
       setMethod("PUT");
@@ -34,6 +33,9 @@ function AddEditComment({
         description: task.description,
         developers: task.developers,
       });
+    } else {
+      setUrl(`http://localhost:3001/tasks/${task?._id}/comments`);
+      setMethod("POST");
     }
   }, []);
 
@@ -46,24 +48,24 @@ function AddEditComment({
           authorization: localStorage.getItem("MyToken"),
           "Content-Type": "application/json",
         },
-      });
-      if (response.status !== 200) {
+      })
+      if (response.status !== 201 && response.status !== 200) {
         const data = await response.json();
         setError("Error in saving the changes");
         setIsLoading(false);
       } else {
         const data = await response.json();
-        if (!task) {
-          console.log("without task",data)
-          setTask(data.task);
-        } else {
+        if (comment) {
           console.log("with task",data)
-           fetchTask();
-          setUpdatedComment({
+            setUpdatedComment({
             task: "",
             description: "",
           });
-        }
+        } else {
+          fetchComments(task?._id);
+          console.log("without task",data)
+          // setTask(data.task);
+        } 
         setIsLoading(false);
         setShowCommentModal(false);
         handleClose();

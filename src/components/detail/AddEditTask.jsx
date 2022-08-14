@@ -1,55 +1,47 @@
-import React, { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import React, { useEffect, useState } from "react"
+import { Form } from "react-bootstrap"
+import Button from "react-bootstrap/Button"
+import Modal from "react-bootstrap/Modal"
 
 function AddEditTask({
-  fetchProjects,
-  fetchProject,
+  fetchTasks,
   setShowTaskModal,
   showTaskModal,
   project,
   setProject,
   task,
-  fetchTask
+  fetchTask,
 }) {
-  const handleClose = () => setShowTaskModal(false);
-  const handleShow = () => setShowTaskModal(true);
+  const handleClose = () => setShowTaskModal(false)
+  const handleShow = () => setShowTaskModal(true)
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [url, setUrl] = useState("");
-  const [method, setMethod] = useState("POST");
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [url, setUrl] = useState("")
+  const [method, setMethod] = useState("POST")
 
   const [updatedTask, setUpdatedTask] = useState({
     task: "",
     description: "",
     developers: [],
-  });
+  })
 
   useEffect(() => {
-    
     if (task) {
-      setUrl(`http://localhost:3001/tasks/${task?._id}`);
-      setMethod("PUT");
+      setUrl(`http://localhost:3001/tasks/${task?._id}`)
+      setMethod("PUT")
       setUpdatedTask({
         task: task.task,
         description: task.description,
         developers: task.developers,
       })
-      console.log(showTaskModal,
-        project,
-        task)
+    } else {
+      setUrl(`http://localhost:3001/projects/${project?._id}/tasks`)
+      setMethod("POST")
     }
-      else{
-        setUrl(`http://localhost:3001/projects/${project?._id}/tasks`)
-        setMethod("POST")
-        console.log("task is not available")
-      }
-  }, []);
+  }, [])
 
   const handleSave = async (e) => {
-    handleClose();
     try {
       const response = await fetch(url, {
         method,
@@ -58,47 +50,46 @@ function AddEditTask({
           authorization: localStorage.getItem("MyToken"),
           "Content-Type": "application/json",
         },
-      });
-      if (response.status !== 200) {
-        // const data = await response.json();
-        setError("Error in saving the changes");
-        setIsLoading(false);
+      })
+      if (response.status !== 201 && response.status !== 200) {
+        // const data = await response.json()
+        setError("Error in saving the changes")
+        setIsLoading(false)
       } else {
-        const data = await response.json();
-        console.log(data)
-        if (!task) {
-          console.log("without task",data)
-          // fetchProject(data.project._id);
-          setProject(data.project);
+        console.log("handleSave")
+        const data = await response.json()
+        console.log(task, data)
+        if (task) {
+          console.log("with task", data)
+          fetchTask(task._id)
+        } else {
+          console.log("without task", data)
+          fetchTasks(data.project._id)
           setUpdatedTask({
             task: "",
             description: "",
           })
-        } else {
-          console.log("with task",data)
-          fetchTask(data.task._id)
         }
-        
-        setIsLoading(false);
-        setShowTaskModal(false);
+        setIsLoading(false)
+        setShowTaskModal(false)
+        handleClose()
       }
     } catch (error) {
-      console.log(error);
-      setError("Could not fetch developers");
-      setIsLoading(false);
+      console.log(error)
+      setError("Could not fetch developers")
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <Modal show={showTaskModal} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>{task? "Edit task":"Add Task"}</Modal.Title>
+        <Modal.Title>{task ? "Edit task" : "Add Task"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form >
-        <p>{project && `Task under project - ${project?.title}`}</p>
-
-          <Form.Group  >
+        <Form>
+          <p>{project && `Task under project - ${project?.title}`}</p>
+          <Form.Group>
             <Form.Label className="w-100">
               task
               <Form.Control
@@ -133,9 +124,7 @@ function AddEditTask({
               />
             </Form.Label>
           </Form.Group>
-          <div>
-            {task?.developer?.name}
-          </div>
+          <div>{task?.developer?.name}</div>
         </Form>
       </Modal.Body>
       <Modal.Footer>
@@ -151,7 +140,7 @@ function AddEditTask({
         </Button>
       </Modal.Footer>
     </Modal>
-  );
+  )
 }
 
-export default AddEditTask;
+export default AddEditTask

@@ -7,6 +7,7 @@ import AddEditTask from "./AddEditTask";
 
 function ProjectDetail() {
   const [project, setProject] = useState(null);
+  const [tasks, setTasks] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [showProjectModal, setShowProjectModal] = useState(false);
@@ -16,6 +17,7 @@ function ProjectDetail() {
   const params = useParams();
   useEffect(() => {
     fetchProject(params.projectId);
+    fetchTasks(params.projectId);
   }, []);
 
   const fetchProject = async (projectId) => {
@@ -34,6 +36,31 @@ function ProjectDetail() {
       } else {
         const data = await response.json();
         setProject(data.project);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+      setError("Could not fetch projects");
+    }
+  };
+
+  const fetchTasks = async (projectId) => {
+    const baseUrl = "http://localhost:3001";
+    try {
+      const response = await fetch(`${baseUrl}/projects/${projectId}/tasks`, {
+        method: "GET",
+        headers: {
+          authorization: localStorage.getItem("MyToken"),
+        },
+      });
+      if (response.status !== 200) {
+        const data = await response.json();
+        setError("Error in fetching projects");
+        setIsLoading(false);
+      } else {
+        const data = await response.json();
+        setTasks(data.tasks);
         setIsLoading(false);
       }
     } catch (error) {
@@ -64,7 +91,7 @@ function ProjectDetail() {
                   <p className="h3">Description</p>
                   <p>{project.description}</p>
                   <p className="h3">All tasks</p>
-                  {project?.tasks?.map((task, i) => (
+                  {tasks?.map((task, i) => (
                     <p key={i} className="pointer"  onClick={() => navigate(`/task/${task._id}`)}> {task.task}</p>
                   ))}
                 </div>
@@ -89,7 +116,8 @@ function ProjectDetail() {
               showTaskModal={showTaskModal}
               setProject={setProject}
               project={project}
-              fetchProject={fetchProject}
+              fetchTasks={fetchTasks}
+              
             />
           </Container>
         )
