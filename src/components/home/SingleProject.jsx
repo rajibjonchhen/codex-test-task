@@ -9,9 +9,12 @@ function SingleProject({project}) {
         <Card className="bg-dark border-light mt-3" style={{minHeight:"250px"}}>
       {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
       <Card.Body >
-        <Card.Title >{project.title}</Card.Title>
-        <Card.Text style={{minHeight:"100px"}}>
+        <Card.Title id="text-wrap-2">{project.title}</Card.Title>
+        <Card.Text id="text-wrap-3" style={{height:"100px"}}>
           {project.description}
+          Developers <br/>
+            { project.developers.length<1? "not assigned":project?.developers?.map((developer) => <span>{developer.name },</span>)}
+          
         </Card.Text>
         <Button variant="primary" onClick={() => {navigate(`/project/${project._id}`)}}>See detail</Button>
       </Card.Body>

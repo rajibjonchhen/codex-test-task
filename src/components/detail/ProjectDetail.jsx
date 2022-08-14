@@ -80,16 +80,17 @@ function ProjectDetail() {
         project && (
           <Container>
             <p className="h1 mt-5">{project.title}</p>
-            <Row style={{ minHeight: "50vh" }}>
-              <Col sm={12} md={6} style={{ margin: "auto" }}>
-                <div className="bg-dark border-light m-5">
+            <Row className="border" style={{ minHeight: "50vh" }}>
+              <Col sm={12} md={6} style={{ margin: "0 auto" }}>
+                <div className="bg-dark p-3">
                   <img src={project?.image || "https://via.placeholder.com/300/50"} alt="project"  width="100%"/>
-                </div>
-              </Col>
-              <Col sm={12} md={6} style={{ margin: "auto" }}>
-                <div className="bg-dark border-light">
                   <p className="h3">Description</p>
                   <p>{project.description}</p>
+                </div>
+              </Col>
+              <Col sm={12} md={6} style={{ margin: "0 auto" }}>
+                <div className="bg-dark  text-start p-3 ">
+                 
                   <p className="h3">All tasks</p>
                   {tasks?.map((task, i) => (
                     <p key={i} className="pointer"  onClick={() => navigate(`/task/${task._id}`)}> {task.task}</p>

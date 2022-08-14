@@ -88,7 +88,9 @@ const [comments, setComments] = useState([])
                                 <p>{task?.userId}</p>
                                 <p className="bg-dark text-start">All comments</p>
                                 {comments?.map((comment, i) => (
-                                    <p key={i} className="bg-warning text-start p-2"> {comment.comment}</p>
+                                    <p key={i} className="bg-warning text-start p-2"> {comment.comment}
+                                    <span>{comment?.commentedBy || ""}</span>
+                                    </p>
                                 ))}
                                 <Button className="m-3"  onClick={() => setShowTaskModal(true)}>Edit Task</Button>
                                 <Button className="m-3"  onClick={() => setShowCommentModal(true)}>Add Comment</Button>
