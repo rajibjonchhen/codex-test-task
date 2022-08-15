@@ -15,7 +15,7 @@ function SingleProject({project}) {
           
         </Card.Text>
         <p>Developers <br/>
-            { project.developers.length<1? "not assigned":project?.developers?.map((developer) => <span>{developer.name },</span>)}
+            { project.developers.length<1? "not assigned":project?.developers?.map((developer) => <span key={developer._id}>{developer.name } {developer.surname }</span>)}
           </p>
         <Button variant="primary" onClick={() => {navigate(`/project/${project._id}`)}}>See detail</Button>
       </Card.Body>

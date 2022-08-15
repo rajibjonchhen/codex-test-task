@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Form, ListGroup, ListGroupItem, Row } from "react-bootstrap";
+import { Badge, Button, Col, Container, Form, ListGroup, ListGroupItem, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import SelectDeveloper from "../../getDevelopers/SelectDeveloper";
 import Loader from "../Loader";
@@ -122,7 +122,9 @@ useEffect(() => {
                   <img src={project?.image || "https://via.placeholder.com/300/50"} alt="project"  width="100%"/>
                   <p className="h3">Description</p>
                   <p>{project.description}</p>
-                  <p className="">Developers <br/>{ project.developers.length<1? "not assigned":project?.developers?.map((developer) => <span className="bg-warning p-1">{developer.name },</span>)} </p>
+                  <p className="">Developers <br/>{ project.developers.length<1? "not assigned":project?.developers?.map((developer) => 
+                  <Badge bg="secondary m-1">{developer.name } {developer.surname }</Badge>
+                  )} </p>
                   
                   <div className="d-flex">
                   
@@ -165,7 +167,7 @@ useEffect(() => {
               fetchTasks={fetchTasks}
             />
 
-            <SelectDeveloperModal showDeveloperModal={showDeveloperModal} setShowDeveloperModal={setShowDeveloperModal} project={project}/>
+            <SelectDeveloperModal showDeveloperModal={showDeveloperModal} setShowDeveloperModal={setShowDeveloperModal} project={project} setProject={setProject}/>
           </Container>
         )
       )}

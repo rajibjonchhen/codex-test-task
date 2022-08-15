@@ -2,49 +2,43 @@ import React, { useEffect, useState } from "react"
 import { Form } from "react-bootstrap"
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
+import { useLocation } from "react-router-dom"
 
 function SelectDeveloperModal({
   setShowDeveloperModal,
   showDeveloperModal,
   project,
+  setProject,
   task,
+  setTask,
 }) {
   const handleClose = () => setShowDeveloperModal(false)
   const handleShow = () => setShowDeveloperModal(true)
 
+  const location = useLocation()
+
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [url, setUrl] = useState("")
-  const [allDevelopers, setAllDevelopers] = useState({});
+  const [allDevelopers, setAllDevelopers] = useState([]);
   const [developer, setDeveloper] = useState("");
-  const [updatedTask, setUpdatedTask] = useState({
-    task: "",
-    description: "",
-    developers: [],
-  })
+  
 
   useEffect(() => {
   fetchDevelopers()
-
+    console.log(window.location.pathname)
     if (task) {
       setUrl(`http://localhost:3001/tasks/${task?._id}/developers`)
-      
-      setUpdatedTask({
-        task: task.task,
-        description: task.description,
-        developers: task.developers,
-      })
     } else {
       setUrl(`http://localhost:3001/projects/${project?._id}/developers`)
       
     }
   }, [])
 
+  useEffect(()=> {
+    console.log("developer-%--",developer)
 
-
-
-
-
+  },[developer])
 
 const fetchDevelopers = async () => {
   const baseUrl = "http://localhost:3001"
@@ -70,15 +64,15 @@ const fetchDevelopers = async () => {
   }
 }
 
-const handleSelect = (developerId) => {
-  setDeveloper(developer)
-}
+
+
 
   const handleAssign = async (e) => {
+    console.log("developer---",developer)
     try {
       const response = await fetch(url, {
         method:"PUT",
-        body: JSON.stringify(developer),
+        body: JSON.stringify({developer}),
         headers: {
           authorization: localStorage.getItem("MyToken"),
           "Content-Type": "application/json",
@@ -86,22 +80,19 @@ const handleSelect = (developerId) => {
       })
       if (response.status !== 201 && response.status !== 200) {
         // const data = await response.json()
+        console.log("with error")
+
         setError("Error in saving the changes")
         setIsLoading(false)
       } else {
         console.log("handleSave")
         const data = await response.json()
-        console.log(task, data)
         if (task) {
           console.log("with task", data)
-          // fetchTask(task._id)
+          setTask(data.task)
         } else {
-          console.log("without task", data)
-          // fetchTasks(data.project._id)
-          setUpdatedTask({
-            task: "",
-            description: "",
-          })
+          console.log("with project", data.project)
+          setProject(data.project)          
         }
         setIsLoading(false)
         setShowDeveloperModal(false)
@@ -123,10 +114,10 @@ const handleSelect = (developerId) => {
       </Modal.Header>
       <Modal.Body> 
         <p>Project - {project?.title}</p>
-      <Form.Select aria-label="Default select example">
-      <option>Select developer</option>
-      {allDevelopers.map((developer) => 
-        <option key={developer.id} value={developer._id} onSelect={() => handleSelect(developer._id)}>{developer.name+" "+developer.surname}</option> 
+      <Form.Select aria-label="Default select example" onChange={(e) => setDeveloper(e.target.value)}>
+      <option value="" >Select developer</option>
+      {allDevelopers.map((developer, i) => 
+        <option key={i} value={developer._id} >{developer.name+" "+developer.surname}</option> 
       )}
     </Form.Select>
       </Modal.Body>
