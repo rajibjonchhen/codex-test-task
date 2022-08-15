@@ -123,7 +123,7 @@ useEffect(() => {
                   <p className="h3">Description</p>
                   <p>{project.description}</p>
                   <p className="">Developers <br/>{ project.developers.length<1? "not assigned":project?.developers?.map((developer) => 
-                  <Badge bg="secondary m-1">{developer.name } {developer.surname }</Badge>
+                  <Badge key={developer._id} bg="secondary m-1">{developer.name } {developer.surname }</Badge>
                   )} </p>
                   
                   <div className="d-flex">
@@ -134,12 +134,14 @@ useEffect(() => {
               </Col>
               <Col sm={12} md={6} style={{ margin: "0 auto" }}>
                 <div className="bg-dark  text-start p-3 ">
-                 
                   <p className="h3">All tasks</p>
                   <ListGroup>
 
-                  {tasks?.map((task, i) => (
-                    <ListGroup.Item key={i} className="pointer" variant="light" onClick={() => navigate(`/task/${task._id}`)}> {task.task}</ListGroup.Item>
+                  {tasks?.map((task, j) => (
+                    <ListGroup.Item key={j} className="pointer" variant="light" onClick={() => navigate(`/task/${task._id}`)}> 
+                    <span>{task.task}</span>
+                    {task.developers.map((developer) => <Badge key={developer._id} bg="secondary">{developer.name}{developer.surname}</Badge>)}
+                    </ListGroup.Item>
                     ))}
                     </ListGroup>
                 </div>

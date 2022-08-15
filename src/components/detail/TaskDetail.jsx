@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Col, Container, Row } from 'react-bootstrap'
+import { Badge, Button, Col, Container, Row } from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
 import Loader from '../Loader'
 import AddEditComment from './AddEditComment'
 import AddEditTask from './AddEditTask'
+import SelectDeveloperModal from './SelectDeveloperModal'
 
 const Task = () => {
 
@@ -13,6 +14,8 @@ const [comments, setComments] = useState([])
   const [error, setError] = useState("")
   const [showCommentModal, setShowCommentModal] = useState(false)
   const [showTaskModal, setShowTaskModal] = useState(false)
+  const [showDeveloperModal, setShowDeveloperModal] = useState(false);
+
 
   const params = useParams()
 
@@ -85,7 +88,14 @@ const [comments, setComments] = useState([])
                         <Col sm={12} md={6} style={{ margin: "auto" }}>
                             <div className='bg-dark border-light mt-3'>
                                 <p>{task?.description}</p>
-                                <p>Developer - {task?.developers.length<1? <span>not assigned</span> : task?.developers.map((developer) => <span>{developer.name}</span>)}</p>
+                                <p>Developer - {task?.developers.length<1? 
+                                <span>not assigned</span> 
+                                : task?.developers.map((developer) => 
+                                <Badge bg="secondary">{developer.name}</Badge>)}</p>
+                                <div className="d-flex">
+                  
+                  <Button className="mx-2" onClick={() => setShowDeveloperModal(true)}>Assign Developer</Button>
+                    </div>
                                 <p className="bg-dark text-start">All comments</p>
                                 {comments?.map((comment, i) => (
                                     <p key={i} className="bg-warning text-start p-2"> {comment.comment}
@@ -95,8 +105,11 @@ const [comments, setComments] = useState([])
                                 <Button className="m-3"  onClick={() => setShowTaskModal(true)}>Edit Task</Button>
                                 <Button className="m-3"  onClick={() => setShowCommentModal(true)}>Add Comment</Button>
                             </div>
+                            {/* modals */}
                             <AddEditTask  fetchTask={fetchTask} task={task} setTask={setTask} setShowTaskModal={setShowTaskModal} showTaskModal={showTaskModal}/>
                             <AddEditComment fetchComments={fetchComments} task={task} setTask={setTask} setShowCommentModal={setShowCommentModal} showCommentModal={showCommentModal}/>
+                            <SelectDeveloperModal showDeveloperModal={showDeveloperModal} setShowDeveloperModal={setShowDeveloperModal} task={task} setTask={setTask}/>
+                            
                         </Col>
                     </Row>
                 </Container>  
