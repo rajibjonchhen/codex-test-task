@@ -15,8 +15,8 @@ function SelectDeveloperModal({
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [url, setUrl] = useState("")
-  const [selectedDeveloper, setSelectedDeveloper] = useState({});
-  const [developers, setDevelopers] = useState([]);
+  const [allDevelopers, setAllDevelopers] = useState({});
+  const [developer, setDeveloper] = useState("");
   const [updatedTask, setUpdatedTask] = useState({
     task: "",
     description: "",
@@ -27,7 +27,7 @@ function SelectDeveloperModal({
   fetchDevelopers()
 
     if (task) {
-      setUrl(`http://localhost:3001/tasks/${task?._id}`)
+      setUrl(`http://localhost:3001/tasks/${task?._id}/developers`)
       
       setUpdatedTask({
         task: task.task,
@@ -35,7 +35,7 @@ function SelectDeveloperModal({
         developers: task.developers,
       })
     } else {
-      setUrl(`http://localhost:3001/projects/${project?._id}`)
+      setUrl(`http://localhost:3001/projects/${project?._id}/developers`)
       
     }
   }, [])
@@ -62,7 +62,7 @@ const fetchDevelopers = async () => {
     else {
       const data = await response.json();
       console.log(data)
-      setDevelopers(data.developers)
+      setAllDevelopers(data.developers)
     }
   } catch (error) {
     console.log(error);
@@ -71,14 +71,14 @@ const fetchDevelopers = async () => {
 }
 
 const handleSelect = (developerId) => {
-  setSelectedDeveloper(developers.push(developerId))
+  setDeveloper(developer)
 }
 
   const handleAssign = async (e) => {
     try {
       const response = await fetch(url, {
         method:"PUT",
-        body: JSON.stringify(developers),
+        body: JSON.stringify(developer),
         headers: {
           authorization: localStorage.getItem("MyToken"),
           "Content-Type": "application/json",
@@ -125,7 +125,7 @@ const handleSelect = (developerId) => {
         <p>Project - {project?.title}</p>
       <Form.Select aria-label="Default select example">
       <option>Select developer</option>
-      {developers.map((developer) => 
+      {allDevelopers.map((developer) => 
         <option key={developer.id} value={developer._id} onSelect={() => handleSelect(developer._id)}>{developer.name+" "+developer.surname}</option> 
       )}
     </Form.Select>
