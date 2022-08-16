@@ -29,12 +29,12 @@ const Registration = ({ loginPage, setLoginPage }) => {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    if (Object.keys(signUpErr).length === 0 && isSubmit) {
-      console.log("I am going to submit");
-      registerUser();
-    }
-  }, [signUpErr]);
+  // useEffect(() => {
+  //   if (Object.keys(signUpErr).length === 0 && isSubmit) {
+  //     console.log("I am going to submit");
+  //     registerUser();
+  //   }
+  // }, [signUpErr]);
 
   useEffect(()=> {
     if(checkUserInput === true){
@@ -53,6 +53,10 @@ const Registration = ({ loginPage, setLoginPage }) => {
     e.preventDefault();
     setSignUpErr(validateForm(signUpUser));
     setIsSubmit(true);
+    if (Object.keys(signUpErr).length === 0 && isSubmit) {
+      console.log("I am going to submit");
+      registerUser();
+    }
   };
 
   const validateForm = (signUpUser) => {
@@ -111,8 +115,7 @@ const Registration = ({ loginPage, setLoginPage }) => {
         const data = await response.json();
         console.log(data);
         localStorage.setItem("MyToken", data.token);
-        // dispatch(setMyInfoAction(data.user))
-        navigate("/home");
+        navigate("/pendingVerification");
       }
     } catch (error) {
       console.log(error);

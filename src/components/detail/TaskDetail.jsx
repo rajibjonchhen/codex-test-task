@@ -5,6 +5,7 @@ import Loader from '../Loader'
 import AddEditComment from './AddEditComment'
 import AddEditTask from './AddEditTask'
 import SelectDeveloperModal from './SelectDeveloperModal'
+import SingleComment from './SingleComment'
 
 const Task = () => {
 
@@ -83,25 +84,28 @@ const [comments, setComments] = useState([])
         {isLoading ? (<Loader/>) : error ? (<div>{error}</div>) 
         : (task &&
                 <Container>
-                    <p className='h2 p-3'>Task - {task?.task}</p>
                     <Row style={{ minHeight: "50vh" }}>
                         <Col sm={12} md={6} style={{ margin: "auto" }}>
-                            <div className='bg-dark border-light mt-3'>
+                            <div className='bg-dark border rounded mt-3 p-3'>
+                              <p className='h2 p-3'>Task - {task?.task}</p>
+                                <p className="h4">Description</p>
                                 <p>{task?.description}</p>
-                                <p>Developer - {task?.developers.length<1? 
-                                <span>not assigned</span> 
+                                <p className="h4">
+                                 Status </p>
+                                <p>{task?.status}</p>
+                                <p className="h4">Developer/s </p>
+                                 {task?.developers.length<1? 
+                                <p>not assigned</p> 
                                 : task?.developers.map((developer) => 
-                                <Badge bg="secondary">{developer.name}</Badge>)}</p>
+                                <Badge bg="secondary">{developer.name}</Badge>)}
+                    </div>
+                                <p className="bg-dark text-start mt-3">All comments</p>
+                                {comments?.map((comment, i) => (
+                                   <SingleComment key={i} comment={comment} task={task} fetchTask={fetchTask}/>
+                                ))}
                                 <div className="d-flex">
                   
-                  <Button className="mx-2" onClick={() => setShowDeveloperModal(true)}>Assign Developer</Button>
-                    </div>
-                                <p className="bg-dark text-start">All comments</p>
-                                {comments?.map((comment, i) => (
-                                    <p key={i} className="bg-warning text-start p-2"> {comment.comment}
-                                    <br/> By - <span>{comment?.commentedBy.name + " " +comment?.commentedBy.surname|| ""}</span>
-                                    </p>
-                                ))}
+                                <Button className="m-3" onClick={() => setShowDeveloperModal(true)}>Assign Developer</Button>
                                 <Button className="m-3"  onClick={() => setShowTaskModal(true)}>Edit Task</Button>
                                 <Button className="m-3"  onClick={() => setShowCommentModal(true)}>Add Comment</Button>
                             </div>

@@ -10,9 +10,11 @@ function Login() {
   return (
     <Container className="theme-light-bg py-3 text-light" style={{minHeight:"100vh"}}>
     <Row>
-      <Col sm={12} md={6} style={{ margin: "auto" }}>
-      <Registration loginPage={loginPage} setLoginPage={setLoginPage} />
+      <Col sm={12} md={6} style={{ margin: "auto",height:"100%" }}>
+        <div className="d-flex align-items-center justify-content-center ">
+        <Registration loginPage={loginPage} setLoginPage={setLoginPage} />
         <SignIn loginPage={loginPage} setLoginPage={setLoginPage} />
+        </div>
         <Copyright/>
       </Col>
     </Row>

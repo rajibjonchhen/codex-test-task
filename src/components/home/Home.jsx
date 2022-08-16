@@ -4,7 +4,7 @@ import AddEditProject from "../detail/AddEditProject";
 import Loader from "../Loader";
 import SingleProject from "./SingleProject";
 
-function Home({user}) {
+function Home({user, fetchUser}) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [projects, setProjects] = useState([]);
@@ -15,9 +15,14 @@ function Home({user}) {
     if(user?.role === "manager"){
       fetchProjects("/projects")
     }else{
-      fetchProjects("/projects/my")
+      fetchProjects("/projects/me")
     }
-  }, [user]);
+  }, [user])
+
+  useEffect(() => {
+    fetchUser()
+}, [])
+
 
   const fetchProjects = async (myPath) => {
     const baseUrl = "http://localhost:3001"
@@ -83,11 +88,11 @@ function Home({user}) {
 
   return (
     <div>
-      <Container className="">
-        <Row>
-          <Col>
-          <h1>{user?.role === "manager"? "All Projects":"My Projects"}</h1>
-          <Button onClick={() => setShowProjectModal(true)} style={{display:user?.role!=="manager"?"none":"block"}}>Create new project</Button>
+      <Container className="py-4">
+        <Row >
+          <Col sm={12} md={4} lg={3} className="m-auto">
+          <h1 className="mt-3">{user?.role === "manager"? "All Projects":"My Projects"}</h1>
+          <Button className="m-auto" onClick={() => setShowProjectModal(true)} style={{display:user?.role!=="manager"?"none":"block"}}>Create new project</Button>
           </Col>
         </Row>
         <Row>

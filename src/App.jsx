@@ -8,15 +8,19 @@ import ProjectDetail from './components/detail/ProjectDetail';
 import Task from './components/detail/TaskDetail';
 import MyNavbar from './components/myNavbar/MyNavbar';
 import { useEffect, useState } from 'react';
+import ConfirmationPage from './components/login/confirmation/ConfirmationPage';
+import PendingVerification from './components/login/confirmation/PendingVerification';
+import MyLayout from './components/myLayout/MyLayout';
+
 
 function App() {
   const [developers, setDevelopers] = useState([]);
   const [user, setUser] = useState(null)
     const [error, setError] = useState(null)
 
-    useEffect(() => {
-        fetchUser()
-    }, [])
+    // useEffect(() => {
+    //     fetchUser()
+    // }, [])
 
     const fetchUser = async () => {
         try {
@@ -29,6 +33,7 @@ function App() {
             if (response.status !== 200) {
                 const data = await response.json()
                 setError(data.message)
+                
             } else{
                 const data = await response.json()
                 console.log(data)
@@ -45,19 +50,14 @@ function App() {
   
     <div className="App bg-dark text-white" style={{minHeight:"100vh"}}>
       <BrowserRouter>
-      <div>
-        {/* <select className="form-control" style={{width:"200px", margin:"10px"}}> */}
-          {developers.map(developer => (
-            <p key={developer._id} value={developer._id}>{developer.name}</p>
-          ))}
-        {/* </select> */}
-      </div>
-      <MyNavbar user={user}/>
+      {/* <MyNavbar user={user}/> */}
         <Routes>
-          <Route path="/home" element={<Home user={user}/>} />
+          <Route path="/home" element={<MyLayout  user={user}><Home user={user} fetchUser={fetchUser}/></MyLayout>} />
           <Route path="/" element={<Login />} />
-          <Route path="/project/:projectId" element={<ProjectDetail />} />
-          <Route path="/task/:taskId" element={<Task />} />
+          <Route path="/project/:projectId" element={<MyLayout  user={user}><ProjectDetail /></MyLayout>} />
+          <Route path="/task/:taskId" element={<MyLayout user={user}><Task /></MyLayout>} />
+          <Route path="/confirm/:userId" element={<ConfirmationPage />} />
+          <Route path="/pendingVerification" element={<PendingVerification/>} />
         </Routes>
       </BrowserRouter>
     </div>

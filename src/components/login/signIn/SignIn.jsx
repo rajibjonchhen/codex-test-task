@@ -25,12 +25,12 @@ const [user, setUser] = useState(null)
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    if (Object.keys(signInErr).length === 0 && isSubmit) {
-      console.log("I am going to submit");
-      registerUser();
-    }
-  }, [signInErr]);
+  // useEffect(() => {
+  //   if (Object.keys(signInErr).length === 0 && isSubmit) {
+  //     console.log("I am going to submit");
+  //     registerUser();
+  //   }
+  // }, [signInErr]);
 
   useEffect(()=> {
     if(checkUserInput === true){
@@ -49,6 +49,10 @@ const [user, setUser] = useState(null)
     e.preventDefault();
     setSignInErr(validateForm(signInUser));
     setIsSubmit(true);
+    if (Object.keys(signInErr).length === 0 && isSubmit) {
+      console.log("I am going to submit");
+      registerUser();
+    }
   };
 
   const validateForm = (signInUser) => {
@@ -85,6 +89,7 @@ const [user, setUser] = useState(null)
         const data = await response.json();
         console.log(data);
         setError(data.error);
+        setTimeout(() => setError(""),2000)
       } else {
         const data = await response.json();
         console.log(data);

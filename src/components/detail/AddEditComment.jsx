@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { useNavigate } from "react-router-dom";
 
 function AddEditComment({
-  setTask,
   setShowCommentModal,
   showCommentModal,
   fetchComments,
   task,
-  comment
+  singleComment,
+  setSingleComment
 }) {
   const handleClose = () => setShowCommentModal(false);
   const handleShow = () => setShowCommentModal(true);
@@ -18,6 +19,7 @@ function AddEditComment({
   const [error, setError] = useState("");
   const [url, setUrl] = useState("");
   const [method, setMethod] = useState("");
+  const navigate = useNavigate()
 
   const [updatedComment, setUpdatedComment] = useState({
     comment: "",
@@ -25,13 +27,12 @@ function AddEditComment({
 
   useEffect(() => {
     
-    if (comment) {
-      setUrl(`http://localhost:3001/comments/${comment?._id}`);
+    if (singleComment) {
+      setUrl(`http://localhost:3001/comments/${singleComment?._id}`);
       setMethod("PUT");
       setUpdatedComment({
-        task: task.task,
-        description: task.description,
-        developers: task.developers,
+        comment: singleComment.comment,
+
       });
     } else {
       setUrl(`http://localhost:3001/tasks/${task?._id}/comments`);
@@ -55,12 +56,9 @@ function AddEditComment({
         setIsLoading(false);
       } else {
         const data = await response.json();
-        if (comment) {
+        if (singleComment) {
           console.log("with task",data)
-            setUpdatedComment({
-            task: "",
-            description: "",
-          });
+          setSingleComment(data.comment)
         } else {
           fetchComments(task?._id);
           console.log("without task",data)
@@ -71,7 +69,9 @@ function AddEditComment({
         handleClose();
       }
     } catch (error) {}
-  };
+  }
+
+ 
 
   return (
     <Modal show={showCommentModal} onHide={handleClose}>
@@ -88,7 +88,7 @@ function AddEditComment({
                 type="text"
                 name="comment"
                 id="comment"
-                value={updatedComment.comment}
+                value={updatedComment?.comment}
                 onChange={(e) =>
                   setUpdatedComment({
                     ...updatedComment,
@@ -98,9 +98,6 @@ function AddEditComment({
               />
             </Form.Label>
           </Form.Group>
-          <div>
-            {task?.developer?.name}
-          </div>
         </Form>
       </Modal.Body>
       <Modal.Footer>
@@ -114,6 +111,7 @@ function AddEditComment({
         <Button variant="primary" onClick={() => handleSave()}>
           Save Changes
         </Button>
+        
       </Modal.Footer>
     </Modal>
   );

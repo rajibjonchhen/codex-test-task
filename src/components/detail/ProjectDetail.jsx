@@ -18,6 +18,8 @@ function ProjectDetail() {
   const navigate = useNavigate();
   const params = useParams();
 
+  const [btnText, setBtnText] = useState('My Tasks');
+  const [filter, setFilter] = useState('');
   const [selected, setSelected] = useState({});
 const [developers, setDevelopers] = useState([]);
 
@@ -29,6 +31,10 @@ useEffect(() => {
     fetchProject(params.projectId);
     fetchTasks(params.projectId);
   }, []);
+
+  useEffect(() => {
+      fetchTasks()
+  }, [filter])
 
   const fetchProject = async (projectId) => {
     const baseUrl = "http://localhost:3001";
@@ -81,10 +87,10 @@ useEffect(() => {
   }
   
 
-  const fetchTasks = async (projectId) => {
+  const fetchTasks = async () => {
     const baseUrl = "http://localhost:3001";
     try {
-      const response = await fetch(`${baseUrl}/projects/${projectId}/tasks`, {
+      const response = await fetch(`${baseUrl}/projects/${params.projectId}/tasks${filter}`, {
         method: "GET",
         headers: {
           authorization: localStorage.getItem("MyToken"),
@@ -106,6 +112,16 @@ useEffect(() => {
     }
   };
 
+  const handleFilter = async (taskId) => {
+    if(filter === "") {
+      setFilter("/my")
+      setBtnText("All Tasks")
+    }else{
+      setFilter("")
+      setBtnText("My Tasks")
+    }
+  }
+
   return (
     <div>
       {isLoading ? (
@@ -116,10 +132,10 @@ useEffect(() => {
         project && (
           <Container className="text-start">
             <p className="h1 mt-5">{project.title}</p>
-            <Row className="border" style={{ minHeight: "50vh" }}>
+            <Row className="border rounded" style={{ minHeight: "50vh" }}>
               <Col sm={12} md={6} style={{ margin: "0 auto" }}>
                 <div className="bg-dark p-3">
-                  <img src={project?.image || "https://via.placeholder.com/300/50"} alt="project"  width="100%"/>
+                  <img src={project?.image || "https://via.placeholder.com/200x100/50"} alt="project"  width="100%"/>
                   <p className="h3">Description</p>
                   <p>{project.description}</p>
                   <p className="">Developers <br/>{ project.developers.length<1? "not assigned":project?.developers?.map((developer) => 
@@ -135,7 +151,7 @@ useEffect(() => {
               <Col sm={12} md={6} style={{ margin: "0 auto" }}>
                 <div className="bg-dark  text-start p-3 ">
                   <p className="h3">All tasks</p>
-                  <ListGroup>
+                  {tasks.length < 1? <p>You have no task in this project</p> : <ListGroup>
 
                   {tasks?.map((task, j) => (
                     <ListGroup.Item key={j} className="pointer" variant="light" onClick={() => navigate(`/task/${task._id}`)}> 
@@ -143,8 +159,9 @@ useEffect(() => {
                     {task.developers.map((developer) => <Badge key={developer._id} bg="secondary">{developer.name}{developer.surname}</Badge>)}
                     </ListGroup.Item>
                     ))}
-                    </ListGroup>
+                    </ListGroup>}
                 </div>
+                <Button className="m-3" onClick={() => {handleFilter()}}>{btnText}</Button>
                 <Button className="m-3" onClick={() => setShowTaskModal(true)}>Add task</Button>
               </Col>
             </Row>

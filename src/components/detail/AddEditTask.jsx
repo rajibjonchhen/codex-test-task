@@ -12,6 +12,9 @@ function AddEditTask({
   task,
   fetchTask,
 }) {
+
+
+
   const handleClose = () => setShowTaskModal(false)
   const handleShow = () => setShowTaskModal(true)
 
@@ -20,10 +23,12 @@ function AddEditTask({
   const [url, setUrl] = useState("")
   const [method, setMethod] = useState("POST")
 
+  const status = ['waiting', 'implementation', 'verifying', 'releasing']
+
   const [updatedTask, setUpdatedTask] = useState({
     task: "",
     description: "",
-    developers: [],
+    status:"waiting"
   })
 
   useEffect(() => {
@@ -34,6 +39,7 @@ function AddEditTask({
         task: task.task,
         description: task.description,
         developers: task.developers,
+        status: task.status,
       })
     } else {
       setUrl(`http://localhost:3001/projects/${project?._id}/tasks`)
@@ -68,6 +74,7 @@ function AddEditTask({
           setUpdatedTask({
             task: "",
             description: "",
+            status:""
           })
         }
         setIsLoading(false)
@@ -124,7 +131,28 @@ function AddEditTask({
               />
             </Form.Label>
           </Form.Group>
-          <div>{task?.developer?.name}</div>
+          <Form.Label>Status of the task</Form.Label>
+            {status.map((st, k) => 
+            <Form.Group key={k}>
+            <Form.Label  className=" d-flex justify-content-start align-items-center">
+              <Form.Check 
+              className="mx-2"
+              key={k}
+              type="radio"
+              name="role"
+              // id={st}
+              value={st}
+              checked={updatedTask.status === st} 
+              onChange={(e) => setUpdatedTask({
+                ...updatedTask,
+                status: e.target.value,
+              })}
+              />
+              {st}
+              </Form.Label>
+            </Form.Group>
+              )}
+          
         </Form>
       </Modal.Body>
       <Modal.Footer>
